@@ -19,8 +19,6 @@ const document = (sourceFile, callback) => {
   });
 };
 
-console.log(document(sourceFile, function (data) {
-  return data;
-}));
+console.log(document(sourceFile, data => data));
 
 module.exports = document;
