@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const parser = require('xml2json');
 const parseString = require('xml2js').parseString;
 
 const sourceFile = path.join(__dirname, 'books.xml');
@@ -19,6 +18,6 @@ const document = (sourceFile, callback) => {
   });
 };
 
-console.log(document(sourceFile, data => data));
+// console.log(document(sourceFile, data => data.toString()));
 
 module.exports = document;

@@ -17,18 +17,20 @@ const transporter = nodemailer.createTransport({
 });
 
 // send some mail
-transporter.sendMail({
-  from: 'kerevicius.ernestas@gmail.com',
-  to: document(sourceFile, (data) => data),
-  subject: 'Message',
-  text: 'I hope this message gets sent!',
-}, (err, info) => {
-  if (err) {
-    console.log('Klaida!');
-    console.log(err.message);
-  } else {
-    console.log('Laiskas issiustas!');
-    console.log(info.messageId);
-    console.log(info.response);
-  }
+document(sourceFile, data => {
+  transporter.sendMail({
+    from: 'kerevicius.ernestas@gmail.com',
+    to: data,
+    subject: 'Message',
+    text: 'I hope this message gets sent!',
+  }, (err, info) => {
+    if (err) {
+      console.log('Klaida!');
+      console.log(err.message);
+    } else {
+      console.log('Laiskas issiustas!');
+      console.log(info.messageId);
+      console.log(info.response);
+    }
+  });
 });
