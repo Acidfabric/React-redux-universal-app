@@ -1,7 +1,3 @@
-#config files
-
 config.json
-
-#dependencies
-
 node_modules
+server/uploads/*
