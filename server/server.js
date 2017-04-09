@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs';
 import Express, { Router } from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
@@ -8,10 +9,18 @@ import nodemailer from 'nodemailer';
 import aws from 'aws-sdk';
 import document from './file-reader';
 
+import config from './config';
+
+// Check if '/uploads' folder exists. If not, creates new one.
+const uploadFolder = path.join(__dirname + '/uploads');
+if (!fs.existsSync(uploadFolder)) {
+  fs.mkdirSync(uploadFolder);
+}
+
 // Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, path.join(__dirname + '/uploads'));
+    callback(null, uploadFolder);
   },
 
   filename: (req, file, callback) => {
@@ -47,7 +56,7 @@ app.post('/upload', upload.single('uploader'), function (req, res, next) {
   if (req.file) {
     console.log(req.body);
     console.log(req.file);
-    const sourceFile = path.join(__dirname + '/uploads/' + req.file.filename);
+    const sourceFile = path.join(uploadFolder + '/' + req.file.filename);
 
     document(sourceFile, data => {
       transporter.sendMail({
