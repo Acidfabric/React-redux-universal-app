@@ -3,6 +3,7 @@ var assert = require('assert');
 const expect = require('chai').expect;
 const document = require('../service');
 
+// Not set yet
 const sourceFile = path.join(__dirname, '../books.xml');
 describe('service', function () {
   it('should return an email', function () {
