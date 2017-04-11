@@ -1,12 +1,25 @@
-const path = require('path');
-var assert = require('assert');
-const expect = require('chai').expect;
-const document = require('../service');
+import path from 'path';
+import chai, { expect, should } from 'chai';
+import chaiHttp from 'chai-http';
+import document from '../file-reader';
 
-// Not set yet
-const sourceFile = path.join(__dirname, '../books.xml');
-describe('service', function () {
-  it('should return an email', function () {
-    expect(document(sourceFile, data => data)).to.equal('karolis.arbaciauskas@gmail.com');
+chai.use(chaiHttp);
+
+const sourceFile = path.join(__dirname + '/books.xml');
+
+describe('File reading', () => {
+
+  it('it expect return an array', (done) => {
+    document(sourceFile, (data) => {
+      expect(data).to.be.a('array');
+      done();
+    });
+  });
+
+  it('it expect return an email adress', (done) => {
+    document(sourceFile, (data) => {
+      expect(data.toString()).to.equal('karolis.arbaciauskas@gmail.com');
+      done();
+    });
   });
 });

@@ -17,15 +17,24 @@ if (!fs.existsSync(uploadFolder)) {
 
 // Multer storage
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
+  destination(req, file, callback) {
     callback(null, uploadFolder);
   },
 
-  filename: (req, file, callback) => {
+  filename(req, file, callback) {
     callback(null, file.originalname + '-' + Date.now());
   },
 });
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage,
+  fileFilter(req, file, callback) {
+    if (file.mimetype !== 'text/xml') {
+      callback(new Error('Only xml are allowed'));
+    }
+
+    callback(null, true);
+  },
+});
 
 // New express app
 const app = new Express();
@@ -45,7 +54,7 @@ app.post('/upload', upload.single('uploader'), (req, res, next) => {
     console.log(req.body);
     console.log(req.file);
 
-    const sourceFile = path.join(uploadFolder + '/' + req.file.filename);
+    const sourceFile = uploadFolder + '/' + req.file.filename;
     document(sourceFile, data => mailerAPI(data));
     return res.end('Thank you for the file');
   }
