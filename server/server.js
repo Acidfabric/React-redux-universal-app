@@ -6,10 +6,9 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import multer from 'multer';
-import jwt from 'jsonwebtoken';
 
 import { config, dummyData } from './config';
-import { createUser } from './user';
+import { createUser, userAuthentication, findUser } from './user';
 import { bcryptHash } from './crypto';
 import document from './file-reader';
 import mailerAPI from './mailer';
@@ -66,17 +65,36 @@ if (process.env.NODE_ENV === 'dev' || 'development') {
           throw err;
         }
 
-        res.json({ success: true });
+        res.end('Dummy user was created!');
       });
     });
   });
 }
 
+const routes = Express.Router();
+
+routes.post('/authenticate', (req, res) => {
+  const superSecret = app.get('superSecret');
+  userAuthentication(req.body.email, req.body.password, superSecret, (callback) => {
+    res.json(callback);
+  });
+});
+
+routes.get('/', (req, res) => {
+  res.json({ message: 'Welcome to the coolest API on earth!' });
+});
+
+routes.get('/users', (req, res) => {
+  findUser((callback) => {
+    res.json(callback);
+  });
+});
+
+// apply the routes to our application with the prefix /api
+app.use('/api', routes);
+
 app.post('/upload', upload.single('uploader'), (req, res, next) => {
   if (req.file) {
-    console.log(req.body);
-    console.log(req.file);
-
     const sourceFile = uploadFolder + '/' + req.file.filename;
     document(sourceFile, data => mailerAPI(data));
     return res.end('Thank you for the file');

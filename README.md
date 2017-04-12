@@ -2,4 +2,5 @@
 
 AWS Simple email service.
 
-You need email element in your xml file.
+You need an email parameter in your xml file.
+To setup user go to '/setup' path.

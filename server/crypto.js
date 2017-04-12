@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { config } from './config';
 
 const cryptoConfig = {
@@ -15,14 +15,12 @@ export const bcryptHash = (password, callback) => {
   });
 };
 
-// bcrypt.hash(cryptoConfig.myPlaintextPassword, cryptoConfig.saltRounds).then(function (hash) {
-//   console.log(hash);
-// });
+export const bcryptCompare = (password, hash, callback) => {
+  bcrypt.compare(password, hash, (err, res) => {
+    callback(res === true);
+  });
 
-// export const bcryptCompare = bcrypt.compare(
-//   cryptoConfig.myPlaintextPassword,
-//   hash,
-//   function (err, res) {
-//     res == true;
-//   }
-// );
+  // bcrypt.compare('not_bacon', hash, (err, res) => {
+  //   // res === false
+  // });
+};
