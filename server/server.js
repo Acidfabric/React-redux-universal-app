@@ -3,9 +3,14 @@ import fs from 'fs';
 import Express, { Router } from 'express';
 import compression from 'compression';
 import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import mongoose from 'mongoose';
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
 
-import config from './config';
+import { config, dummyData } from './config';
+import { createUser } from './user';
+import { bcryptHash } from './crypto';
 import document from './file-reader';
 import mailerAPI from './mailer';
 
@@ -41,13 +46,31 @@ const app = new Express();
 
 // Express middleware
 app.use(compression());
+mongoose.connect(config.database);
+app.set('superSecret', config.secret);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(morgan('dev'));
 
 // Routes
 app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname + '/index.html'));
 });
+
+if (process.env.NODE_ENV === 'dev' || 'development') {
+  app.get('/setup', (req, res) => {
+    bcryptHash(dummyData.password, (encrypt) => {
+      createUser(dummyData.email, encrypt, true, (err, callback) => {
+        if (err) {
+          throw err;
+        }
+
+        res.json({ success: true });
+      });
+    });
+  });
+}
 
 app.post('/upload', upload.single('uploader'), (req, res, next) => {
   if (req.file) {

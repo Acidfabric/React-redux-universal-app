@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:7.8
 RUN mkdir /app
 WORKDIR /app
 COPY package.json /app

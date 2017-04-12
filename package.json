@@ -4,7 +4,7 @@
   "description": "AWS Simple email service",
   "main": "index.js",
   "scripts": {
-    "start-dev": "NODE_ENV=dev nodemon --exec babel-node -- server/index.js",
+    "start": "NODE_ENV=dev nodemon --exec babel-node -- server/index.js",
     "test": "mocha server/test --require babel-polyfill --compilers js:babel-register",
     "clean": "rimraf server/uploads/*",
     "slate": "rimraf node_modules && npm install"
@@ -15,9 +15,14 @@
     "aws-sdk": "^2.27.0",
     "babel-polyfill": "^6.23.0",
     "babel-register": "^6.24.1",
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "express": "^4.15.2",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.9.4",
+    "morgan": "^1.8.1",
     "multer": "^1.3.0",
     "nodemailer": "^3.1.5",
     "xml2json": "^0.11.0"
