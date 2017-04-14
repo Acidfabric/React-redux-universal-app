@@ -6,10 +6,11 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import multer from 'multer';
+import jwt from 'express-jwt';
 
 import { config, dummyData } from './config';
-import { createUser, userAuthentication, findUser } from './user';
 import { bcryptHash } from './crypto';
+import { createUser, userAuthentication, findUser } from './user';
 import document from './file-reader';
 import mailerAPI from './mailer';
 
@@ -81,7 +82,7 @@ routes.post('/authenticate', (req, res) => {
 });
 
 routes.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the coolest API on earth!' });
+  res.json({ message: 'Welcome to the API V1!' });
 });
 
 routes.get('/users', (req, res) => {

@@ -26,12 +26,6 @@ export const findUser = (callback) => {
   });
 };
 
-// bcryptCompare = (password, callback) => {
-//   bcrypt.compare(password, hash, (err, res) => {
-//     callback(res === true);
-//   });
-// };
-
 export const userAuthentication = (email, secret, superSecret, callback) => {
   User.findOne({ email }, (err, user) => {
     if (err) {
@@ -39,19 +33,16 @@ export const userAuthentication = (email, secret, superSecret, callback) => {
     }
 
     if (!user) {
-      callback({ success: false, message: 'Authentication failed. User not found.' });
+      callback({ success: false, message: 'Authentication failed. Wrong name or password.' });
     } else if (user) {
       bcryptCompare(secret, user.password, (passAuth) => {
         if (passAuth != true) {
-          callback({ success: false, message: 'Authentication failed. Wrong password.' });
+          callback({ success: false, message: 'Authentication failed. Wrong name or password.' });
         } else {
-          // if user is found and password is right
-          // create a token
           const token = jwt.sign(user, superSecret, {
-            expiresIn: 1440, // expires in 24 hours
+            expiresIn: 1440,
           });
 
-          // return the information including token as JSON
           callback({
             success: true,
             message: 'Enjoy your token!',

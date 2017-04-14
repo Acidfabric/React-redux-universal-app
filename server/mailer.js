@@ -17,9 +17,12 @@ const mailerAPI = (data) => {
       name: 'Karolis Arbačiauskas',
       address: 'info@whypeopledance.com',
     },
-    to: data,
+    to: data.email,
     subject: 'Message',
-    html: `I hope this message gets sent!`,
+    html: `You own ${data.price}.  <br />
+    Description: <br />
+    ${data.description}
+    `,
   }, (err, info) => {
     if (err) {
       console.log('Message not sent.');
