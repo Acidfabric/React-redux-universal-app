@@ -97,7 +97,7 @@ app.use('/api', routes);
 app.post('/upload', upload.single('uploader'), (req, res, next) => {
   if (req.file) {
     const sourceFile = uploadFolder + '/' + req.file.filename;
-    document(sourceFile, data => mailerAPI(data));
+    document(sourceFile);
     return res.end('Thank you for the file');
   }
 
