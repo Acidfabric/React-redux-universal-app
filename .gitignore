@@ -2,3 +2,4 @@
 config.json
 node_modules
 server/uploads/*
+server/private_key.pem

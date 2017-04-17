@@ -29,7 +29,6 @@ const sendMail = function (data) {
         console.log('Message not sent.');
         console.log(err.message);
       } else {
-        console.log('Message sent.');
         console.log(info.messageId);
         console.log(info.response);
       }

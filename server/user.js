@@ -2,11 +2,11 @@ import User from './models/user';
 import { bcryptCompare } from './crypto';
 import jwt from 'jsonwebtoken';
 
-export const createUser = (email, password, admin=false, callback) => {
+export const createUser = (email, hash, admin=false, callback) => {
   const newUser = new User(
     {
       email: email.toLowerCase(),
-      password,
+      password: hash,
       admin,
     }
   );
@@ -26,7 +26,7 @@ export const findUser = (callback) => {
   });
 };
 
-export const userAuthentication = (email, secret, superSecret, callback) => {
+export const userAuthentication = (email, userPassword, jwtSecret, callback) => {
   User.findOne({ email }, (err, user) => {
     if (err) {
       throw err;
@@ -35,17 +35,19 @@ export const userAuthentication = (email, secret, superSecret, callback) => {
     if (!user) {
       callback({ success: false, message: 'Authentication failed. Wrong name or password.' });
     } else if (user) {
-      bcryptCompare(secret, user.password, (passAuth) => {
-        if (passAuth != true) {
+
+      // (user entered password, hash from database, decryption)
+      bcryptCompare(userPassword, user.password, decryptedPassword => {
+        if (decryptedPassword != true) {
           callback({ success: false, message: 'Authentication failed. Wrong name or password.' });
         } else {
-          const token = jwt.sign(user, superSecret, {
+          const token = jwt.sign(user, jwtSecret, {
             expiresIn: 1440,
           });
 
           callback({
             success: true,
-            message: 'Enjoy your token!',
+            message: 'Success!',
             token,
           });
         }

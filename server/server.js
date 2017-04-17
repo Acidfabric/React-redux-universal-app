@@ -6,13 +6,13 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
 import multer from 'multer';
-import jwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
+import jwtExpress from 'express-jwt';
 
 import { config, dummyData } from './config';
 import { bcryptHash } from './crypto';
 import { createUser, userAuthentication, findUser } from './user';
 import document from './file-reader';
-import mailerAPI from './mailer';
 
 // Check if '/uploads' folder exists. If not, creates new one.
 const uploadFolder = path.join(__dirname + '/uploads');
@@ -47,21 +47,28 @@ const app = new Express();
 // Express middleware
 app.use(compression());
 mongoose.connect(config.database);
-app.set('superSecret', config.secret);
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 app.use(morgan('dev'));
+app.use(Express.static('server/css'));
+
+app.use(jwtExpress({ secret: config.secret })
+  .unless({ path: ['/', '/login', '/authenticate', '/setup'] })
+);
 
 // Routes
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname + '/index.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname + '/login.html'));
 });
 
 if (process.env.NODE_ENV === 'dev' || 'development') {
   app.get('/setup', (req, res) => {
-    bcryptHash(dummyData.password, (encrypt) => {
-      createUser(dummyData.email, encrypt, true, (err, callback) => {
+    bcryptHash(dummyData.password, hash => {
+      createUser(dummyData.email, hash, true, (err, callback) => {
         if (err) {
           throw err;
         }
@@ -72,46 +79,37 @@ if (process.env.NODE_ENV === 'dev' || 'development') {
   });
 }
 
-const routes = Express.Router();
-
-routes.post('/authenticate', (req, res) => {
-  const superSecret = app.get('superSecret');
-  userAuthentication(req.body.email, req.body.password, superSecret, (callback) => {
-    res.json(callback);
-  });
-});
-
-routes.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the API V1!' });
-});
-
-routes.get('/users', (req, res) => {
-  findUser((callback) => {
-    res.json(callback);
-  });
-});
-
-// apply the routes to our application with the prefix /api
-app.use('/api', routes);
-
 app.post('/upload', upload.single('uploader'), (req, res, next) => {
   if (req.file) {
     const sourceFile = uploadFolder + '/' + req.file.filename;
     document(sourceFile);
-    return res.end('Thank you for the file');
+
+    return res.json('Thank you for the file');
   }
 
-  res.status(204).end();
+  res.status(204).json('There was an error uploading this file to server');
+});
+
+app.post('/authenticate', (req, res) => {
+  userAuthentication(req.body.email, req.body.password, config.secret, callback => {
+    res.status(200).json({ token: callback.token });
+  });
+});
+
+app.get('/users', (req, res) => {
+  findUser(callback => {
+    res.json(callback);
+  });
 });
 
 // Start server
-app.listen(config.port, (error) => {
+app.listen(config.port, error => {
   if (error) {
     console.error(error);
   } else {
     console.info(
       `==> 🌎  Listening on port ${config.port}.
-Open up http://localhost:${config.port}/ in your browser.`
+      Open up http://localhost:${config.port}/ in your browser.`
     );
   }
 });

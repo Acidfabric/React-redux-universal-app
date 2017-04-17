@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=dev nodemon --exec babel-node -- server/index.js",
     "test": "mocha server/test --require babel-polyfill --compilers js:babel-register",
-    "clean": "rimraf server/uploads/*",
+    "clean": "rimraf server/uploads/* server/uploads/private_key.pem",
     "slate": "rimraf node_modules && npm install"
   },
   "author": "",
