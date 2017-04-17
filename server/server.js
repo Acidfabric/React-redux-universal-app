@@ -91,7 +91,7 @@ app.post('/upload', upload.single('uploader'), (req, res, next) => {
 });
 
 app.post('/authenticate', (req, res) => {
-  userAuthentication(req.body.email, req.body.password, config.secret, callback => {
+  userAuthentication(req.body.email.toLowerCase(), req.body.password, config.secret, callback => {
     res.status(200).json({ token: callback.token });
   });
 });
