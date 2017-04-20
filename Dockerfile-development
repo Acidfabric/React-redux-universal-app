@@ -11,8 +11,7 @@ RUN mkdir ~/.ssh \
   && ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -P “” \
   && chmod 700 ~/.ssh
 
-ENV NODE_ENV production
+ENV NODE_ENV development
 
 EXPOSE 3000
-CMD ["npm", "run", "bs"]
-
+CMD ["npm", "start"]

@@ -9,7 +9,7 @@ export const bcryptHash = (password, callback) => {
 };
 
 export const bcryptCompare = (password, hash, callback) => {
-  bcrypt.compare(password, hash, (err, res) => {
+  bcrypt.compare(password, hash).then(res => {
     callback(res);
   });
 };
