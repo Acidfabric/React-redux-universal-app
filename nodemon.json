@@ -6,7 +6,8 @@
   ],
   "verbose": true,
   "watch": [
-    "server"
+    "src/server",
+    "./webpack.config.dev.js"
   ],
   "env": {
     "NODE_ENV": "development"

@@ -1,9 +1,11 @@
+
+
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 
 // Check if '/uploads' folder exists. If not, creates new one.
-export const uploadFolder = path.join(__dirname + '/uploads');
+export const uploadFolder = path.join(`${__dirname}/uploads`);
 if (!fs.existsSync(uploadFolder)) {
   fs.mkdirSync(uploadFolder);
 }
@@ -15,7 +17,7 @@ const storage = multer.diskStorage({
   },
 
   filename(req, file, callback) {
-    callback(null, file.originalname + '-' + Date.now());
+    callback(null, `${file.originalname}-${Date.now()}`);
   },
 });
 export const upload = multer({

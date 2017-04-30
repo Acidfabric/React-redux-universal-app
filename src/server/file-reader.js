@@ -1,12 +1,13 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+/* eslint no-console: 0 */
+
 import Promise from 'bluebird';
-import path from 'path';
 import fs from 'fs';
 import { parseString } from 'xml2js';
-import sendMail from './mailer';
 
 Promise.promisifyAll(fs);
 
-const convertXML = function (file) {
+function convertXML(file) {
   return new Promise((resolve, reject) => {
     if (file !== 'undefined') {
       parseString(file, (err, users) => {
@@ -17,15 +18,14 @@ const convertXML = function (file) {
       reject(reason);
     }
   });
-};
+}
 
-const document = (sourceFile) => {
+const fileReader = (sourceFile) => {
   fs.readFileAsync(sourceFile, { encoding: 'utf-8' })
   .then(convertXML)
-  .then(sendMail)
   .catch((error) => {
     console.log(error.message);
   });
 };
 
-export default document;
+export default fileReader;

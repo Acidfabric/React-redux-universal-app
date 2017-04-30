@@ -14,10 +14,10 @@ export default function () {
       return;
     }
 
-    bcryptHash(dummyData.password, hash => {
-      createUser(dummyData.email, hash, true, (err, callback) => {
-        if (err) {
-          throw err;
+    bcryptHash(dummyData.password, (hash) => {
+      createUser(dummyData.email, hash, true, (error, callback) => {
+        if (error) {
+          throw error;
         }
 
         console.log('Success! Dummy user created.');
