@@ -1,7 +1,15 @@
-#BNBServices
+React redux SSR
+======
 
-AWS Simple email service.
+Simple react-redux SSR app
 
-To setup dummyUser visit '/setup' path.
 
-You need to provide an email parameter in your xml file for sending emails.
+## Installation
+
+Run app in development mode
+
+```bash
+docker-compose -f docker-compose-development.yml up
+```
+
+specify -d flag for composing docker containers in background
