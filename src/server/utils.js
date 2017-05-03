@@ -1,8 +1,9 @@
-
-
 import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
+
+import config from './config';
 
 // Check if '/uploads' folder exists. If not, creates new one.
 export const uploadFolder = path.join(`${__dirname}/uploads`);
@@ -30,3 +31,15 @@ export const upload = multer({
     callback(null, true);
   },
 });
+
+export const generateToken = (user) => {
+  const tokenPayload = {
+    email: user.email,
+    admin: user.admin,
+    _id: user._id.toString(),
+  };
+
+  return jwt.sign(tokenPayload, config.secret, {
+    expiresIn: 60 * 60 * 24,
+  });
+};

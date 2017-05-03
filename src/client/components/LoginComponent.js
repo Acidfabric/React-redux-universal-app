@@ -68,7 +68,11 @@ const LoginComponent = ({ passwordToggle, showPassword, loginRequest }) => {
 LoginComponent.propTypes = {
   showPassword: PropTypes.func.isRequired,
   loginRequest: PropTypes.func.isRequired,
-  // passwordToggle: PropTypes.bool.isRequired,
+  passwordToggle: PropTypes.bool,
+};
+
+LoginComponent.defaultProps = {
+  passwordToggle: false,
 };
 
 export default LoginComponent;

@@ -10,7 +10,6 @@ import compression from 'compression';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from 'mongoose';
-// import jwtExpress from 'express-jwt';
 
 // webpack dependencies
 import webpack from 'webpack';
@@ -38,7 +37,7 @@ if (process.env.NODE_ENV === 'development') {
   const compiler = webpack(webpackConfig);
   app.use(webpackDevMiddleware(compiler, {
     noInfo: true,
-    publicPath: webpackConfig.output.publicPath,
+    publicPath: '/static',
   }));
   app.use(webpackHotMiddleware(compiler));
 }
@@ -64,12 +63,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
-
-// app.use(jwtExpress({
-//   secret: config.secret,
-// })
-//   .unless({ path: ['/', '/login', '/authenticate'] })
-// );
 
 // Serve static files
 app.use('/static', Express.static('static'));
@@ -110,7 +103,7 @@ function renderFullPage(html, preloadedState) {
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
       </head>
       <body>
-        <div id="root">${process.env.NODE_ENV === 'production' ? html : `<div>${html}</div>`}</div>
+        <div id="root">${html}</div>
         <script>
           // http://redux.js.org/docs/recipes/ServerRendering.html#security-considerations
           window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
@@ -120,6 +113,7 @@ function renderFullPage(html, preloadedState) {
     </html>
   `;
 }
+// <div id="root">${process.env.NODE_ENV === 'production' ? html : `<div>${html}</div>`}</div>
 
 // Start server
 app.listen(config.port, (error) => {

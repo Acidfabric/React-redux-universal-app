@@ -1,14 +1,14 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const webpackConfig = {
   devtool: 'inline-source-map',
   entry: [
-      'react-hot-loader/patch',
-      'webpack-hot-middleware/client',
-      './src/client/index.js',
-    ],
+    'react-hot-loader/patch',
+    'webpack-hot-middleware/client',
+    './src/client/index.js',
+  ],
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -22,7 +22,7 @@ const webpackConfig = {
         test: /\.js$/,
         use: 'babel-loader',
         exclude: /node_modules/,
-        include: path.resolve(__dirname, 'src'),
+        include: __dirname,
       },
 
       // {
@@ -42,7 +42,7 @@ const webpackConfig = {
       //     ],
       //   }),
       // },
-       {
+      {
         test: /\.css$/,
         use: [
           { loader: 'style-loader' },
@@ -56,7 +56,7 @@ const webpackConfig = {
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin("[name].[contenthash].css"),
+    new ExtractTextPlugin('[name].[contenthash].css'),
     new webpack.DefinePlugin({
       'process.env': {
         CLIENT: JSON.stringify(true),

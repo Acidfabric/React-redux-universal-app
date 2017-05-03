@@ -48,12 +48,15 @@ export const userAuthentication = (email, userPassword, jwtSecret, callback) => 
             success: false,
           });
         } else {
-          const token = jwt.sign(user, jwtSecret, {
+          const tokenPayload = {
+            email: user.email,
+            admin: user.admin,
+            _id: user._id.toString(),
+          };
+          const token = jwt.sign(tokenPayload, jwtSecret, {
             expiresIn: 60 * 60 * 24,
           });
-
           callback({
-            user,
             token,
             message: 'Success!',
             success: true,

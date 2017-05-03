@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import path from 'path';
+import jwtExpress from 'express-jwt';
 
 import { userAuthentication, findUser } from './user';
 import { uploadFolder, upload } from './utils';
@@ -7,6 +8,11 @@ import fileReader from './file-reader';
 import config from './config';
 
 const router = Router();
+
+router.use(jwtExpress({
+  secret: config.secret,
+}).unless({ path: ['/api/authenticate'] }));
+
 // Routes
 router.get('/', (req, res) => {
   res.sendFile(path.join(`${__dirname}/index.html`));
@@ -29,17 +35,11 @@ router.post('/upload', upload.single('uploader'), (req, res) => {
 
 // Authenticate user
 router.post('/authenticate', (req, res) => {
-  userAuthentication(req.body.email.toLowerCase(), req.body.password, config.secret, (callback) => {
+  userAuthentication(req.body.email, req.body.password, config.secret, (callback) => {
     if (callback.success === false) {
       res.status(401).json(callback);
     } else {
-      res
-        // .status(200)
-        // .set({
-        //   'Content-Type': 'text/html',
-        //   Authorization: `Bearer ${callback.token}`,
-        // })
-        .json(callback);
+      res.json(callback);
     }
   });
 });

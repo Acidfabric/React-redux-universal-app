@@ -2,7 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import rootReducer from '../reducers/rootReducer';
 
-const configureStore = () => {
+const configureStore = (preloadedState) => {
   // Middleware and store enhancers
   const composeEnhancers =
     process.env.NODE_ENV !== 'production'
@@ -19,6 +19,7 @@ const configureStore = () => {
 
   const store = createStore(
     rootReducer,
+    preloadedState,
     enhancer,
   );
 

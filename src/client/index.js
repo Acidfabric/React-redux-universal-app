@@ -5,6 +5,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
 import { AppContainer } from 'react-hot-loader';
 import configureStore from './store/configureStore';
 import App from './containers/App';
@@ -13,14 +14,16 @@ import App from './containers/App';
 const store = configureStore(window.__PRELOADED_STATE__);
 
 // Allow the passed state to be garbage-collected
-// delete window.__PRELOADED_STATE__;
+delete window.__PRELOADED_STATE__;
 
 
 const render = (Component) => {
   ReactDOM.render(
     <AppContainer>
       <Provider store={store}>
-        <Component />
+        <BrowserRouter>
+          <Component />
+        </BrowserRouter>
       </Provider>
     </AppContainer>,
     document.getElementById('root')

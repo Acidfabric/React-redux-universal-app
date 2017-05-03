@@ -1,13 +1,21 @@
+import jwtDecode from 'jwt-decode';
+
 import { PASSWORD_TOGGLE, LOGIN_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS, LOGOUT } from '../actions/loginActions';
 
 // Initial State
-const initialState = {
-  currentUser: null,
+const initialState = (token => ({
+  currentUser: token ? jwtDecode(token) : null,
   errorMessage: null,
   isAuthenticating: false,
-  isLoggedIn: false,
   passwordToggle: false,
-};
+}))(localStorage.getItem('authorization'));
+
+// const initialState = {
+//   currentUser: null,
+//   errorMessage: null,
+//   isAuthenticating: false,
+//   passwordToggle: false,
+// };
 
 const login = (state = initialState, action) => {
   switch (action.type) {
@@ -31,14 +39,13 @@ const login = (state = initialState, action) => {
       };
     case LOGIN_SUCCESS:
       return {
-        currentUser: action.token,
+        currentUser: action.user,
         errorMessage: null,
         isAuthenticating: false,
         isLoggedIn: true,
       };
     case LOGOUT:
       return {
-        currentUser: null,
         errorMessage: null,
         isAuthenticating: false,
         isLoggedIn: false,
